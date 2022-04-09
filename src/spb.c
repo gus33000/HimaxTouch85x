@@ -29,7 +29,8 @@
 NTSTATUS
 SpbDoWriteDataSynchronously(
     IN SPB_CONTEXT* SpbContext,
-    IN UCHAR Address,
+    IN PUCHAR Address,
+    IN ULONG AddressLength,
     IN PVOID Data,
     IN ULONG Length
 )
@@ -63,7 +64,7 @@ SpbDoWriteDataSynchronously(
     // The address pointer and data buffer must be combined
     // into one contiguous buffer representing the write transaction.
     //
-    length = Length + 1;
+    length = Length + AddressLength;
     memory = NULL;
 
     if (length > DEFAULT_SPB_BUFFER_SIZE)
@@ -104,22 +105,12 @@ SpbDoWriteDataSynchronously(
     //
     // Transaction starts by specifying the address bytes
     //
-    RtlCopyMemory(buffer, &Address, sizeof(Address));
+    RtlCopyMemory(buffer, Address, AddressLength);
 
     //
     // Address is followed by the data payload
     //
-    RtlCopyMemory((buffer + sizeof(Address)), Data, length - sizeof(Address));
-
-#if I2C_VERBOSE_LOGGING
-    DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "I2CWRITE: LENGTH=%d", length);
-    for (ULONG j = 0; j < length; j++)
-    {
-        UCHAR byte = *(buffer + j);
-        DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, " %02hhX", byte);
-    }
-    DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "\n");
-#endif
+    RtlCopyMemory((buffer + AddressLength), Data, length - AddressLength);
 
     status = WdfIoTargetSendWriteSynchronously(
         SpbContext->SpbIoTarget,
@@ -152,7 +143,8 @@ exit:
 NTSTATUS
 SpbWriteDataSynchronously(
     IN SPB_CONTEXT* SpbContext,
-    IN UCHAR Address,
+    IN PUCHAR Address,
+    IN ULONG AddressLength,
     IN PVOID Data,
     IN ULONG Length
 )
@@ -184,6 +176,7 @@ SpbWriteDataSynchronously(
     status = SpbDoWriteDataSynchronously(
         SpbContext,
         Address,
+        AddressLength,
         Data,
         Length);
 
@@ -195,7 +188,8 @@ SpbWriteDataSynchronously(
 NTSTATUS
 SpbReadDataSynchronously(
     IN SPB_CONTEXT* SpbContext,
-    IN UCHAR Address,
+    _In_reads_bytes_(AddressLength) PUCHAR Address,
+    IN ULONG AddressLength,
     _In_reads_bytes_(Length) PVOID Data,
     IN ULONG Length
 )
@@ -237,6 +231,7 @@ SpbReadDataSynchronously(
     status = SpbDoWriteDataSynchronously(
         SpbContext,
         Address,
+        AddressLength,
         NULL,
         0);
 

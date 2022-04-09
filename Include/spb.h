@@ -41,7 +41,8 @@ typedef struct _SPB_CONTEXT
 NTSTATUS 
 SpbReadDataSynchronously(
     _In_ SPB_CONTEXT *SpbContext,
-    _In_ UCHAR Address,
+    _In_reads_bytes_(AddressLength) PUCHAR Address,
+    _In_ ULONG AddressLength,
     _In_reads_bytes_(Length) PVOID Data,
     _In_ ULONG Length
     );
@@ -61,7 +62,8 @@ SpbTargetInitialize(
 NTSTATUS
 SpbWriteDataSynchronously(
     IN SPB_CONTEXT *SpbContext,
-    IN UCHAR Address,
+    IN PUCHAR Address,
+    IN ULONG AddressLength,
     IN PVOID Data,
     IN ULONG Length
     );

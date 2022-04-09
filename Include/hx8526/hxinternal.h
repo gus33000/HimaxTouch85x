@@ -41,6 +41,41 @@
 // Ignore warning C4324: 'xxx' : structure was padded due to __declspec(align())
 #pragma warning (disable : 4324)
 
+#define HX85X_IC_POWER_ON_COMMAND     { 0x81 }
+#define HX85X_MCU_POWER_ON_COMMAND    { 0x35, 0x02 }
+#define HX85X_SENSE_ON_COMMAND        { 0x83 }
+#define HX85X_SENSE_OFF_COMMAND       { 0x82 }
+#define HX85X_GET_ID_COMMAND          { 0x31 }
+#define HX85X_GET_EVENT_COMMAND       { 0x85 }
+#define HX85X_GET_SLEEP_COMMAND       { 0x63 }
+
+#define HX8520_FLASH_POWER_ON_COMMAND { 0x36, 0x01 }
+#define HX8520_SPEED_MODE_COMMAND     { 0x9D, 0x80 }
+
+#define HX8526_FLASH_POWER_ON_COMMAND { 0x36, 0x0F, 0x53 }
+#define HX8526_FETCH_FLASH_COMMAND    { 0xDD, 0x04, 0x02 }
+
+typedef struct _HIMAX_TOUCH_DATA
+{
+	BYTE PositionX_High;
+	BYTE PositionX_Low;
+	BYTE PositionY_High;
+	BYTE PositionY_Low;
+} HIMAX_TOUCH_DATA, * PHIMAX_TOUCH_DATA;
+
+typedef struct _HIMAX_EVENT_DATA
+{
+	HIMAX_TOUCH_DATA TouchData[5];
+
+	BYTE Reserved0[8];
+
+	BYTE Reserved1           : 4;
+	BYTE NumberOfTouchPoints : 4;
+
+	BYTE ActivePointsMask;
+	BYTE Reserved2[2];
+} HIMAX_EVENT_DATA, * PHIMAX_EVENT_DATA;
+
 #define TOUCH_POOL_TAG_HX              (ULONG)'xhoT'
 
 //

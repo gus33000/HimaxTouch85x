@@ -131,7 +131,8 @@ Return Value:
         //
         status = SpbReadDataSynchronously(
             &devContext->I2CContext,
-            headerTemp.Address,
+            &headerTemp.Address,
+            1,
             readBuffer,
             headerTemp.RequestedTransferLength);
         if (!NT_SUCCESS(status))
@@ -174,7 +175,8 @@ Return Value:
         //
         status = SpbWriteDataSynchronously(
             &devContext->I2CContext,
-            headerIn->Address,
+            &headerIn->Address,
+            1,
             (PVOID)(headerIn + 1),
             headerIn->RequestedTransferLength);
 
