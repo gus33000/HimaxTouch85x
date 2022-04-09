@@ -265,7 +265,6 @@ Hx8526ConfigureFunctions(
       NTSTATUS status = STATUS_SUCCESS;
       BYTE DeviceID[3] = {0};
       BYTE SleepStatus = 0;
-      LARGE_INTEGER delay;
 
       //
       // Read Chip ID
@@ -495,6 +494,129 @@ exit:
 }
 
 NTSTATUS
+Hx8520GetObjectStatusFromController(
+      IN VOID* ControllerContext,
+      IN SPB_CONTEXT* SpbContext,
+      IN DETECTED_OBJECTS* Data
+)
+/*++
+
+Routine Description:
+
+      This routine reads raw touch messages from hardware. If there is
+      no touch data available (if a non-touch interrupt fired), the
+      function will not return success and no touch data was transferred.
+
+Arguments:
+
+      ControllerContext - Touch controller context
+      SpbContext - A pointer to the current i2c context
+      Data - A pointer to any returned F11 touch data
+
+Return Value:
+
+      NTSTATUS, where only success indicates data was returned
+
+--*/
+{
+      NTSTATUS status;
+      HX8526_CONTROLLER_CONTEXT* controller;
+
+      int i, x, y;
+      PHX8520_EVENT_DATA controllerData = NULL;
+      controller = (HX8526_CONTROLLER_CONTEXT* )ControllerContext;
+
+      controllerData = ExAllocatePoolWithTag(
+          NonPagedPoolNx,
+          sizeof(HX8520_EVENT_DATA),
+          TOUCH_POOL_TAG_HX);
+
+      if (controllerData == NULL)
+      {
+            status = STATUS_INSUFFICIENT_RESOURCES;
+            goto exit;
+      }
+
+      //
+      // Packets we need is determined by context
+      //
+      status = SpbReadDataSynchronously(
+            SpbContext, 
+            HX85X_GET_EVENT_COMMAND, 
+            sizeof(HX85X_GET_EVENT_COMMAND), 
+            controllerData, 
+            sizeof(HX8520_EVENT_DATA));
+
+      if (!NT_SUCCESS(status))
+      {
+            Trace(
+                TRACE_LEVEL_ERROR,
+                TRACE_INTERRUPT,
+                "Error reading finger status data - 0x%08lX",
+                status);
+
+            goto free_buffer;
+      }
+
+      if (controllerData->NumberOfTouchPoints == 0x0F)
+      {
+            controllerData->NumberOfTouchPoints = 0;
+      }
+
+      if (controllerData->NumberOfTouchPoints > HX8520_MAX_TOUCH_DATA)
+      {
+            Trace(
+                TRACE_LEVEL_ERROR,
+                TRACE_INTERRUPT,
+                "Invalid Touch Point count. - %d",
+                controllerData->NumberOfTouchPoints);
+
+            goto free_buffer;
+      }
+
+      if (controllerData->ActivePointsMask == 0xFF)
+      {
+            controllerData->ActivePointsMask = 0;
+      }
+
+      BYTE X_MSB = 0;
+      BYTE X_LSB = 0;
+      BYTE Y_MSB = 0;
+      BYTE Y_LSB = 0;
+
+      for (i = 0; i < controllerData->NumberOfTouchPoints; i++)
+      {
+            X_MSB = controllerData->TouchData[i].PositionX_High;
+            X_LSB = controllerData->TouchData[i].PositionX_Low;
+            Y_MSB = controllerData->TouchData[i].PositionY_High;
+            Y_LSB = controllerData->TouchData[i].PositionY_Low;
+
+            if ((controllerData->ActivePointsMask & (1 << i)) != 0)
+            {
+                  Data->States[i] = OBJECT_STATE_FINGER_PRESENT_WITH_ACCURATE_POS;
+            }
+            else
+            {
+                  Data->States[i] = OBJECT_STATE_NOT_PRESENT;
+            }
+
+            x = (X_MSB << 8) | X_LSB;
+            y = (Y_MSB << 8) | Y_LSB;
+
+            Data->Positions[i].X = x;
+            Data->Positions[i].Y = y;
+      }
+
+free_buffer:
+      ExFreePoolWithTag(
+          controllerData,
+          TOUCH_POOL_TAG_HX);
+
+exit:
+      return status;
+}
+
+NTSTATUS
 TchServiceObjectInterrupts(
       IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext,
@@ -509,10 +631,21 @@ TchServiceObjectInterrupts(
       //
       // See if new touch data is available
       //
-      status = Hx8526GetObjectStatusFromController(
-          ControllerContext,
-          SpbContext,
-          &data);
+      if (ControllerContext->ChipModel == 0x8526)
+      {
+            status = Hx8526GetObjectStatusFromController(
+                  ControllerContext,
+                  SpbContext,
+                  &data);
+      }
+      else
+      {
+            status = Hx8520GetObjectStatusFromController(
+                  ControllerContext,
+                  SpbContext,
+                  &data);
+      }
+
 
       if (!NT_SUCCESS(status))
       {
