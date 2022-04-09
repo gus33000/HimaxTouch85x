@@ -356,7 +356,7 @@ OnPrepareHardware(
             devContext->ResetGpioId.HighPart =
                 res->u.Connection.IdHighPart;
 
-            devContext->HasResetGpio = TRUE;
+            //devContext->HasResetGpio = TRUE;
         }
     }
 
