@@ -50,6 +50,109 @@ Hx8526ChangePage(
       return STATUS_SUCCESS;
 }
 
+NTSTATUS Hx8526ConfigureController(
+      IN SPB_CONTEXT* SpbContext
+)
+{
+      NTSTATUS status = STATUS_SUCCESS;
+      LARGE_INTEGER delay;
+
+      //
+      // Power On IC
+      //
+      status = SpbWriteDataSynchronously(
+            SpbContext, 
+            HX85X_IC_POWER_ON_COMMAND, 
+            sizeof(HX85X_IC_POWER_ON_COMMAND), 
+            NULL, 
+            0);
+
+      if (!NT_SUCCESS(status))
+      {
+            Trace(
+                TRACE_LEVEL_ERROR,
+                TRACE_INIT,
+                "Could not power on IC - 0x%08lX",
+                status);
+            goto exit;
+      }
+
+      delay.QuadPart = -10 * 120;
+      KeDelayExecutionThread(KernelMode, TRUE, &delay);
+
+      //
+      // Power On MCU
+      //
+      status = SpbWriteDataSynchronously(
+            SpbContext, 
+            HX85X_MCU_POWER_ON_COMMAND, 
+            sizeof(HX85X_MCU_POWER_ON_COMMAND), 
+            NULL, 
+            0);
+
+      if (!NT_SUCCESS(status))
+      {
+            Trace(
+                TRACE_LEVEL_ERROR,
+                TRACE_INIT,
+                "Could not power on MCU - 0x%08lX",
+                status);
+            goto exit;
+      }
+
+      delay.QuadPart = -10 * 10;
+      KeDelayExecutionThread(KernelMode, TRUE, &delay);
+
+      //
+      // Power On Flash
+      //
+      status = SpbWriteDataSynchronously(
+            SpbContext, 
+            HX8526_FLASH_POWER_ON_COMMAND, 
+            sizeof(HX8526_FLASH_POWER_ON_COMMAND), 
+            NULL, 
+            0);
+
+      if (!NT_SUCCESS(status))
+      {
+            Trace(
+                TRACE_LEVEL_ERROR,
+                TRACE_INIT,
+                "Could not power on Flash - 0x%08lX",
+                status);
+            goto exit;
+      }
+
+      delay.QuadPart = -10 * 10;
+      KeDelayExecutionThread(KernelMode, TRUE, &delay);
+
+      //
+      // Fetch Flash
+      //
+      status = SpbWriteDataSynchronously(
+            SpbContext, 
+            HX8526_FETCH_FLASH_COMMAND, 
+            sizeof(HX8526_FETCH_FLASH_COMMAND), 
+            NULL, 
+            0);
+
+      if (!NT_SUCCESS(status))
+      {
+            Trace(
+                TRACE_LEVEL_ERROR,
+                TRACE_INIT,
+                "Could not fetch Flash - 0x%08lX",
+                status);
+            goto exit;
+      }
+
+      delay.QuadPart = -10 * 10;
+      KeDelayExecutionThread(KernelMode, TRUE, &delay);
+
+exit:
+      return status;
+}
+
 NTSTATUS
 Hx8526ConfigureFunctions(
       IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
@@ -145,97 +248,17 @@ Hx8526ConfigureFunctions(
           TRACE_INIT,
           "Initializing Digitizer IC... Please wait");
 
-      //
-      // Power On IC
-      //
-      status = SpbWriteDataSynchronously(
-            SpbContext, 
-            HX85X_IC_POWER_ON_COMMAND, 
-            sizeof(HX85X_IC_POWER_ON_COMMAND), 
-            NULL, 
-            0);
+      status = Hx8526ConfigureController(SpbContext);
 
       if (!NT_SUCCESS(status))
       {
             Trace(
                 TRACE_LEVEL_ERROR,
                 TRACE_INIT,
-                "Could not power on IC - 0x%08lX",
+                "Could not configure specific controller - 0x%08lX",
                 status);
             goto exit;
       }
-
-      delay.QuadPart = -10 * 120;
-      KeDelayExecutionThread(KernelMode, TRUE, &delay);
-
-      //
-      // Power On MCU
-      //
-      status = SpbWriteDataSynchronously(
-            SpbContext, 
-            HX85X_MCU_POWER_ON_COMMAND, 
-            sizeof(HX85X_MCU_POWER_ON_COMMAND), 
-            NULL, 
-            0);
-
-      if (!NT_SUCCESS(status))
-      {
-            Trace(
-                TRACE_LEVEL_ERROR,
-                TRACE_INIT,
-                "Could not power on MCU - 0x%08lX",
-                status);
-            goto exit;
-      }
-
-      delay.QuadPart = -10 * 10;
-      KeDelayExecutionThread(KernelMode, TRUE, &delay);
-
-      //
-      // Power On Flash
-      //
-      status = SpbWriteDataSynchronously(
-            SpbContext, 
-            HX8526_FLASH_POWER_ON_COMMAND, 
-            sizeof(HX8526_FLASH_POWER_ON_COMMAND), 
-            NULL, 
-            0);
-
-      if (!NT_SUCCESS(status))
-      {
-            Trace(
-                TRACE_LEVEL_ERROR,
-                TRACE_INIT,
-                "Could not power on Flash - 0x%08lX",
-                status);
-            goto exit;
-      }
-
-      delay.QuadPart = -10 * 10;
-      KeDelayExecutionThread(KernelMode, TRUE, &delay);
-
-      //
-      // Fetch Flash
-      //
-      status = SpbWriteDataSynchronously(
-            SpbContext, 
-            HX8526_FETCH_FLASH_COMMAND, 
-            sizeof(HX8526_FETCH_FLASH_COMMAND), 
-            NULL, 
-            0);
-
-      if (!NT_SUCCESS(status))
-      {
-            Trace(
-                TRACE_LEVEL_ERROR,
-                TRACE_INIT,
-                "Could not fetch Flash - 0x%08lX",
-                status);
-            goto exit;
-      }
-
-      delay.QuadPart = -10 * 10;
-      KeDelayExecutionThread(KernelMode, TRUE, &delay);
 
 exit:
       return status;
