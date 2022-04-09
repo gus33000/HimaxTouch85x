@@ -302,7 +302,7 @@ Hx85xConfigureFunctions(
           "Chip Model - %04lX",
           ControllerContext->ChipModel);
 
-      if (ControllerContext->ChipModel != 0x8526 || ControllerContext->ChipModel != 0x8520 || ControllerContext->ChipModel != 0x8528)
+      if (ControllerContext->ChipModel != 0x8526 && ControllerContext->ChipModel != 0x8520 && ControllerContext->ChipModel != 0x8528)
       {
             Trace(
                 TRACE_LEVEL_ERROR,
