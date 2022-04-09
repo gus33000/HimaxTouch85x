@@ -185,7 +185,7 @@ TchPowerSettingCallback(
                 &GestureEnabled,
                 sizeof(DWORD))) && GestureEnabled == 1)
             {
-                status = Hx8526SetReportingFlagsF12(
+                status = Hx8526SetReportingFlags(
                     ControllerContext,
                     SpbContext,
                     HX8526_REPORTING_WAKEUP_GESTURE_MODE,
@@ -232,7 +232,7 @@ TchPowerSettingCallback(
                 goto exit;
             }
 
-            status = Hx8526SetReportingFlagsF12(
+            status = Hx8526SetReportingFlags(
                 ControllerContext,
                 SpbContext,
                 HX8526_REPORTING_CONTINUOUS_MODE,

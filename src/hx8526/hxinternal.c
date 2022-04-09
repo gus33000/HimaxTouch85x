@@ -429,7 +429,7 @@ Hx8526ServiceInterrupts(
 }
 
 NTSTATUS
-Hx8526SetReportingFlagsF12(
+Hx8526SetReportingFlags(
       IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext,
       IN UCHAR NewMode,
