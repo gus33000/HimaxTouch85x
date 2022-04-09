@@ -1,6 +1,6 @@
 # Himax Touch 85x Controller Driver for Windows
 In this repository you can find the Himax Touch 85x controller driver for Windows (KMDF).
-This driver supports Himax 8520 and 8526 touch controllers.
+This driver supports Himax 8520/8528 and 8526 touch controllers.
 
 This repository has been forked from https://github.com/theR4K/SynapticsTouch for the base and modified to work with Himax digitizers.
 
