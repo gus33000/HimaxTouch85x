@@ -21,12 +21,12 @@
 #include <Cross Platform Shim\compat.h>
 #include <spb.h>
 #include <report.h>
-#include <hx8526\hxinternal.h>
+#include <hx85x\hxinternal.h>
 #include <hxinternal.tmh>
 
 NTSTATUS
-Hx8526BuildFunctionsTable(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xBuildFunctionsTable(
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext
 )
 {
@@ -37,8 +37,8 @@ Hx8526BuildFunctionsTable(
 }
 
 NTSTATUS
-Hx8526ChangePage(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xChangePage(
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext,
       IN int DesiredPage
 )
@@ -257,8 +257,8 @@ exit:
 }
 
 NTSTATUS
-Hx8526ConfigureFunctions(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xConfigureFunctions(
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext
 )
 {
@@ -397,11 +397,11 @@ Return Value:
 --*/
 {
       NTSTATUS status;
-      HX8526_CONTROLLER_CONTEXT* controller;
+      HX85X_CONTROLLER_CONTEXT* controller;
 
       int i, x, y;
       PHX8526_EVENT_DATA controllerData = NULL;
-      controller = (HX8526_CONTROLLER_CONTEXT* )ControllerContext;
+      controller = (HX85X_CONTROLLER_CONTEXT* )ControllerContext;
 
       controllerData = ExAllocatePoolWithTag(
           NonPagedPoolNx,
@@ -520,11 +520,11 @@ Return Value:
 --*/
 {
       NTSTATUS status;
-      HX8526_CONTROLLER_CONTEXT* controller;
+      HX85X_CONTROLLER_CONTEXT* controller;
 
       int i, x, y;
       PHX8520_EVENT_DATA controllerData = NULL;
-      controller = (HX8526_CONTROLLER_CONTEXT* )ControllerContext;
+      controller = (HX85X_CONTROLLER_CONTEXT* )ControllerContext;
 
       controllerData = ExAllocatePoolWithTag(
           NonPagedPoolNx,
@@ -618,7 +618,7 @@ exit:
 
 NTSTATUS
 TchServiceObjectInterrupts(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext,
       IN PREPORT_CONTEXT ReportContext
 )
@@ -678,8 +678,8 @@ exit:
 }
 
 NTSTATUS
-Hx8526ServiceInterrupts(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xServiceInterrupts(
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext,
       IN PREPORT_CONTEXT ReportContext
 )
@@ -692,8 +692,8 @@ Hx8526ServiceInterrupts(
 }
 
 NTSTATUS
-Hx8526SetReportingFlags(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xSetReportingFlags(
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext,
       IN UCHAR NewMode,
     OUT UCHAR* OldMode
@@ -708,8 +708,8 @@ Hx8526SetReportingFlags(
 }
 
 NTSTATUS
-Hx8526ChangeChargerConnectedState(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xChangeChargerConnectedState(
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext,
       IN UCHAR ChargerConnectedState
 )
@@ -722,8 +722,8 @@ Hx8526ChangeChargerConnectedState(
 }
 
 NTSTATUS
-Hx8526ChangeSleepState(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xChangeSleepState(
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext,
       IN UCHAR SleepState
 )
@@ -733,7 +733,7 @@ Hx8526ChangeSleepState(
 
       UNREFERENCED_PARAMETER(ControllerContext);
 
-      if (SleepState == HX8526_F01_DEVICE_CONTROL_SLEEP_MODE_SLEEPING)
+      if (SleepState == HX85X_F01_DEVICE_CONTROL_SLEEP_MODE_SLEEPING)
       {
             //
             // Sense ON
@@ -786,8 +786,8 @@ exit:
 }
 
 NTSTATUS
-Hx8526GetFirmwareVersion(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xGetFirmwareVersion(
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext
 )
 {
@@ -798,8 +798,8 @@ Hx8526GetFirmwareVersion(
 }
 
 NTSTATUS
-Hx8526CheckInterrupts(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xCheckInterrupts(
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext,
       IN ULONG* InterruptStatus
 )
@@ -812,8 +812,8 @@ Hx8526CheckInterrupts(
 }
 
 NTSTATUS
-Hx8526ConfigureInterruptEnable(
-      IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xConfigureInterruptEnable(
+      IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext
 )
 {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 12.0
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HimaxTouch8526", "HimaxTouch8526.vcxproj", "{1E12CAAD-D041-4C21-B673-6FF831FC3D70}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HimaxTouch85x", "HimaxTouch85x.vcxproj", "{1E12CAAD-D041-4C21-B673-6FF831FC3D70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

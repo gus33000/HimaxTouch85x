@@ -107,10 +107,10 @@ typedef struct _RM4_F01_CTRL_REGISTERS_LOGICAL
 	UINT32 DozeInterval;
 	UINT32 DozeThreshold;
 	UINT32 DozeHoldoff;
-} HX8526_F01_CTRL_REGISTERS_LOGICAL;
+} HX85X_F01_CTRL_REGISTERS_LOGICAL;
 
-#define HX8526_MILLISECONDS_TO_TENTH_MILLISECONDS(n) n/10
-#define HX8526_SECONDS_TO_HALF_SECONDS(n) 2*n
+#define HX85X_MILLISECONDS_TO_TENTH_MILLISECONDS(n) n/10
+#define HX85X_SECONDS_TO_HALF_SECONDS(n) 2*n
 
 //
 // Function $11 - 2-D Touch Sensor
@@ -119,7 +119,7 @@ typedef struct _RM4_F01_CTRL_REGISTERS_LOGICAL
 //
 // Logical structure for getting registry config settings
 //
-typedef struct _HX8526_F11_CTRL_REGISTERS_LOGICAL
+typedef struct _HX85X_F11_CTRL_REGISTERS_LOGICAL
 {
 	UINT32 ReportingMode;
 	UINT32 AbsPosFilt;
@@ -158,20 +158,20 @@ typedef struct _HX8526_F11_CTRL_REGISTERS_LOGICAL
 	UINT32 YClipHi;
 	UINT32 MinFingerSeparation;
 	UINT32 MaxFingerMovement;
-} HX8526_F11_CTRL_REGISTERS_LOGICAL;
+} HX85X_F11_CTRL_REGISTERS_LOGICAL;
 
 //
 // Driver structures
 //
 
-typedef struct _HX8526_CONFIGURATION
+typedef struct _HX85X_CONFIGURATION
 {
-	HX8526_F01_CTRL_REGISTERS_LOGICAL DeviceSettings;
-	HX8526_F11_CTRL_REGISTERS_LOGICAL TouchSettings;
+	HX85X_F01_CTRL_REGISTERS_LOGICAL DeviceSettings;
+	HX85X_F11_CTRL_REGISTERS_LOGICAL TouchSettings;
 	UINT32 PepRemovesVoltageInD3;
-} HX8526_CONFIGURATION;
+} HX85X_CONFIGURATION;
 
-typedef struct _HX8526_CONTROLLER_CONTEXT
+typedef struct _HX85X_CONTROLLER_CONTEXT
 {
 	WDFDEVICE FxDevice;
 	WDFWAITLOCK ControllerLock;
@@ -185,7 +185,7 @@ typedef struct _HX8526_CONTROLLER_CONTEXT
 	// Register configuration programmed to chip
 	//
 	TOUCH_SCREEN_SETTINGS TouchSettings;
-	HX8526_CONFIGURATION Config;
+	HX85X_CONFIGURATION Config;
 
 	UCHAR Data1Offset;
 
@@ -194,85 +194,85 @@ typedef struct _HX8526_CONTROLLER_CONTEXT
 	int ChipModel;
 
 	int HidQueueCount;
-} HX8526_CONTROLLER_CONTEXT;
+} HX85X_CONTROLLER_CONTEXT;
 
 NTSTATUS
-Hx8526BuildFunctionsTable(
-	IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xBuildFunctionsTable(
+	IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
 	IN SPB_CONTEXT* SpbContext
 );
 
 NTSTATUS
-Hx8526ChangePage(
-	IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xChangePage(
+	IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
 	IN SPB_CONTEXT* SpbContext,
 	IN int DesiredPage
 );
 
 NTSTATUS
-Hx8526ConfigureFunctions(
-	IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xConfigureFunctions(
+	IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
 	IN SPB_CONTEXT* SpbContext
 );
 
 NTSTATUS
-Hx8526ServiceInterrupts(
-	IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xServiceInterrupts(
+	IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
 	IN SPB_CONTEXT* SpbContext,
 	IN PREPORT_CONTEXT ReportContext
 );
 
-#define HX8526_F01_DEVICE_CONTROL_SLEEP_MODE_OPERATING  0
-#define HX8526_F01_DEVICE_CONTROL_SLEEP_MODE_SLEEPING   1
+#define HX85X_F01_DEVICE_CONTROL_SLEEP_MODE_OPERATING  0
+#define HX85X_F01_DEVICE_CONTROL_SLEEP_MODE_SLEEPING   1
 
 #pragma pack(push)
 #pragma pack(1)
-typedef enum _HX8526_REPORTING_FLAGS
+typedef enum _HX85X_REPORTING_FLAGS
 {
-	HX8526_REPORTING_CONTINUOUS_MODE = 0,
-	HX8526_REPORTING_REDUCED_MODE = 1,
-	HX8526_REPORTING_WAKEUP_GESTURE_MODE = 2,
-} HX8526_REPORTING_FLAGS;
+	HX85X_REPORTING_CONTINUOUS_MODE = 0,
+	HX85X_REPORTING_REDUCED_MODE = 1,
+	HX85X_REPORTING_WAKEUP_GESTURE_MODE = 2,
+} HX85X_REPORTING_FLAGS;
 #pragma pack(pop)
 
 NTSTATUS
-Hx8526SetReportingFlags(
-    IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xSetReportingFlags(
+    IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
     IN SPB_CONTEXT* SpbContext,
     IN UCHAR NewMode,
     OUT UCHAR* OldMode
 );
 
 NTSTATUS
-Hx8526ChangeChargerConnectedState(
-    IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xChangeChargerConnectedState(
+    IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
     IN SPB_CONTEXT* SpbContext,
     IN UCHAR ChargerConnectedState
 );
 
 NTSTATUS
-Hx8526ChangeSleepState(
-    IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xChangeSleepState(
+    IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
     IN SPB_CONTEXT* SpbContext,
     IN UCHAR SleepState
 );
 
 NTSTATUS
-Hx8526GetFirmwareVersion(
-    IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xGetFirmwareVersion(
+    IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
     IN SPB_CONTEXT* SpbContext
 );
 
 NTSTATUS
-Hx8526CheckInterrupts(
-    IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xCheckInterrupts(
+    IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
     IN SPB_CONTEXT* SpbContext,
     IN ULONG* InterruptStatus
 );
 
 NTSTATUS
-Hx8526ConfigureInterruptEnable(
-    IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
+Hx85xConfigureInterruptEnable(
+    IN HX85X_CONTROLLER_CONTEXT* ControllerContext,
     IN SPB_CONTEXT* SpbContext
 );
 

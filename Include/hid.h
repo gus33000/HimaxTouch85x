@@ -177,7 +177,7 @@ TchReadReport(
 #define X_MASK 0xFE, 0xFE
 #define Y_MASK 0xFD, 0xFD
 
-#define HIMAX_HX8526_DIGITIZER_FINGER_CONTACT_1 \
+#define HIMAX_HX85X_DIGITIZER_FINGER_CONTACT_1 \
 	BEGIN_COLLECTION, 0x02, /* Collection (Logical) */ \
 		USAGE, 0x42, /* Usage (Tip Switch) */ \
 		LOGICAL_MINIMUM, 0x00, /* Logical Minimum (0) */ \
@@ -217,7 +217,7 @@ TchReadReport(
 		UNIT, 0x00, /* Unit: None */ \
 	END_COLLECTION /* End Collection */
 
-#define HIMAX_HX8526_DIGITIZER_FINGER_CONTACT_2 \
+#define HIMAX_HX85X_DIGITIZER_FINGER_CONTACT_2 \
 	BEGIN_COLLECTION, 0x02, /* Collection (Logical) */ \
 		USAGE_PAGE, 0x0D, /* Usage Page (Digitizer) */ \
 		USAGE, 0x42, /* Usage (Tip Switch) */ \
@@ -255,7 +255,7 @@ TchReadReport(
 		UNIT, 0x00, /* Unit: None */ \
 	END_COLLECTION /* End Collection */
 
-#define HIMAX_HX8526_DIGITIZER_STYLUS_CONTACT_1 \
+#define HIMAX_HX85X_DIGITIZER_STYLUS_CONTACT_1 \
 	BEGIN_COLLECTION, 0x00, /* Collection (Physical) */ \
 		USAGE, 0x42, /* Usage (Tip Switch) */ \
 		LOGICAL_MINIMUM, 0x00, /* Logical Minimum (0) */ \
@@ -306,7 +306,7 @@ TchReadReport(
 		UNIT, 0x00, /* Unit: None */ \
 	END_COLLECTION /* End Collection */
 
-#define HIMAX_HX8526_DIGITIZER_DIAGNOSTIC1 \
+#define HIMAX_HX85X_DIGITIZER_DIAGNOSTIC1 \
 	USAGE_PAGE_1, 0x05, 0xFF, /* Usage Page (Vendor Defined 0xFF05) */ \
 	USAGE, 0x01, /* Usage (0x01) */ \
 	BEGIN_COLLECTION, 0x01, /* Collection (Application) */ \
@@ -326,7 +326,7 @@ TchReadReport(
 		FEATURE, 0x02, /* Feature: (Data, Var, Abs) */ \
 	END_COLLECTION /* End Collection */
 
-#define HIMAX_HX8526_DIGITIZER_DIAGNOSTIC2 \
+#define HIMAX_HX85X_DIGITIZER_DIAGNOSTIC2 \
 	USAGE_PAGE_1, 0x05, 0xFF, /* Usage Page (Vendor Defined 0xFF05) */ \
 	USAGE, 0x02, /* Usage (0x02) */ \
 	BEGIN_COLLECTION, 0x01, /* Collection (Application) */ \
@@ -342,7 +342,7 @@ TchReadReport(
 		INPUT, 0x02, /* Input: (Data, Var, Abs) */ \
 	END_COLLECTION /* End Collection */
 
-#define HIMAX_HX8526_DIGITIZER_DIAGNOSTIC3 \
+#define HIMAX_HX85X_DIGITIZER_DIAGNOSTIC3 \
 	USAGE_PAGE_1, 0x05, 0xFF, /* Usage Page (Vendor Defined 0xFF05) */ \
 	USAGE, 0x03, /* Usage (0x03) */ \
 	BEGIN_COLLECTION, 0x01, /* Collection (Application) */ \
@@ -358,7 +358,7 @@ TchReadReport(
 		INPUT, 0x02, /* Input: (Data, Var, Abs) */ \
 	END_COLLECTION /* End Collection */
 
-#define HIMAX_HX8526_DIGITIZER_DIAGNOSTIC4 \
+#define HIMAX_HX85X_DIGITIZER_DIAGNOSTIC4 \
 	USAGE_PAGE_1, 0x05, 0xFF, /* Usage Page (Vendor Defined 0xFF05) */ \
 	USAGE, 0x04, /* Usage (0x04) */ \
 	BEGIN_COLLECTION, 0x01, /* Collection (Application) */ \
@@ -378,15 +378,15 @@ TchReadReport(
 		FEATURE, 0x02, /* Feature: (Data, Var, Abs) */ \
 	END_COLLECTION /* End Collection */
 
-#define HIMAX_HX8526_DIGITIZER_FINGER \
+#define HIMAX_HX85X_DIGITIZER_FINGER \
 	USAGE_PAGE, 0x0D, /* Usage Page (Digitizer) */ \
 	USAGE, 0x04, /* Usage (Touch Screen) */ \
 	BEGIN_COLLECTION, 0x01, /* Collection (Application) */ \
 		REPORT_ID, REPORTID_FINGER, /* Report ID (1) */ \
 		USAGE, 0x22, /* Usage (Finger) */ \
-		HIMAX_HX8526_DIGITIZER_FINGER_CONTACT_1, /* Finger Contact (1) */ \
+		HIMAX_HX85X_DIGITIZER_FINGER_CONTACT_1, /* Finger Contact (1) */ \
 		USAGE, 0x00, /* Usage (Undefined) */ \
-		HIMAX_HX8526_DIGITIZER_FINGER_CONTACT_2, /* Finger Contact (2) */ \
+		HIMAX_HX85X_DIGITIZER_FINGER_CONTACT_2, /* Finger Contact (2) */ \
 		USAGE_PAGE, 0x0D, /* Usage Page (Digitizer) */ \
 		USAGE, 0x54, /* Usage (Contact Count) */ \
 		REPORT_SIZE, 0x08, /* Report Size (8) */ \
@@ -405,7 +405,7 @@ TchReadReport(
 		FEATURE, 0x02, \
 	END_COLLECTION /* End Collection */
 
-#define HIMAX_HX8526_DIGITIZER_REPORTMODE \
+#define HIMAX_HX85X_DIGITIZER_REPORTMODE \
 	USAGE_PAGE, 0x0D, /* Usage Page (Digitizer) */ \
 	USAGE, 0x0E, /* Usage (Configuration) */ \
 	BEGIN_COLLECTION, 0x01, /* Collection (Application) */ \
@@ -427,7 +427,7 @@ TchReadReport(
 		END_COLLECTION, /* End Collection */ \
 	END_COLLECTION /* End Collection */
 
-#define HIMAX_HX8526_DIGITIZER_KEYPAD \
+#define HIMAX_HX85X_DIGITIZER_KEYPAD \
 	USAGE_PAGE, 0x01, /* Usage Page (Generic Desktop Ctrls) */ \
 	USAGE, 0x0D, /* Usage (Portable Device Control) */ \
 	BEGIN_COLLECTION, 0x01, /* Collection (Application) */ \
@@ -485,13 +485,13 @@ TchReadReport(
 		INPUT, 0x03, /* Input (Const,Var,Abs,No Wrap,Linear,Preferred State,No Null Position) */ \
 	END_COLLECTION /* End Collection */
 
-#define HIMAX_HX8526_DIGITIZER_STYLUS \
+#define HIMAX_HX85X_DIGITIZER_STYLUS \
 	USAGE_PAGE, 0x0D, /* Usage Page (Digitizer) */ \
 	USAGE, 0x02, /* Usage (Pen) */ \
 	BEGIN_COLLECTION, 0x01, /* Collection (Application) */ \
 		REPORT_ID, REPORTID_STYLUS, /* Report ID (11) */ \
 		USAGE, 0x20, /* Usage (Stylus) */ \
-		HIMAX_HX8526_DIGITIZER_STYLUS_CONTACT_1, /* Stylus (1) */ \
+		HIMAX_HX85X_DIGITIZER_STYLUS_CONTACT_1, /* Stylus (1) */ \
 		USAGE_PAGE_1, 0x00, 0xff, \
 		REPORT_ID, REPORTID_PENHQA, \
 		USAGE, 0xc5, \

@@ -23,7 +23,7 @@
 
 #include <internal.h>
 #include <controller.h>
-#include <hx8526\hxinternal.h>
+#include <hx85x\hxinternal.h>
 #include <spb.h>
 #include <initguid.h>
 #include <devguid.h>
@@ -246,7 +246,7 @@ Return Value:
                 goto exit;
             }
 
-            status = Hx8526ChangePage(
+            status = Hx85xChangePage(
                 devContext->TouchContext,
                 &devContext->I2CContext,
                 *requestedPage);

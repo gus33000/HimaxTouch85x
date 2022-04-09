@@ -23,7 +23,7 @@
 #include <Cross Platform Shim\compat.h>
 #include <internal.h>
 #include <controller.h>
-#include <hx8526\hxinternal.h>
+#include <hx85x\hxinternal.h>
 #include <hid.h>
 #include <hid.tmh>
 
@@ -32,22 +32,22 @@ const USHORT gOEMProductID = 0x3578;    // "8526"
 const USHORT gOEMVersionID = 3200;
 
 const PWSTR gpwstrManufacturerID = L"Himax";
-const PWSTR gpwstrProductID = L"852606";
-const PWSTR gpwstrSerialNumber = L"852606";
+const PWSTR gpwstrProductID = L"8526";
+const PWSTR gpwstrSerialNumber = L"8526";
 
 //
 // HID Report Descriptor for a touch device
 //
 
 const UCHAR gReportDescriptor[] = {
-	HIMAX_HX8526_DIGITIZER_DIAGNOSTIC1,
-	HIMAX_HX8526_DIGITIZER_DIAGNOSTIC2,
-	HIMAX_HX8526_DIGITIZER_DIAGNOSTIC3,
-	HIMAX_HX8526_DIGITIZER_DIAGNOSTIC4,
-	HIMAX_HX8526_DIGITIZER_FINGER,
-	HIMAX_HX8526_DIGITIZER_REPORTMODE,
-	HIMAX_HX8526_DIGITIZER_KEYPAD,
-	HIMAX_HX8526_DIGITIZER_STYLUS
+	HIMAX_HX85X_DIGITIZER_DIAGNOSTIC1,
+	HIMAX_HX85X_DIGITIZER_DIAGNOSTIC2,
+	HIMAX_HX85X_DIGITIZER_DIAGNOSTIC3,
+	HIMAX_HX85X_DIGITIZER_DIAGNOSTIC4,
+	HIMAX_HX85X_DIGITIZER_FINGER,
+	HIMAX_HX85X_DIGITIZER_REPORTMODE,
+	HIMAX_HX85X_DIGITIZER_KEYPAD,
+	HIMAX_HX85X_DIGITIZER_STYLUS
 };
 const ULONG gdwcbReportDescriptor = sizeof(gReportDescriptor);
 
@@ -288,7 +288,7 @@ Return Value:
 	//
 	if (devContext->ServiceInterruptsAfterD0Entry == TRUE)
 	{
-		Hx8526ServiceInterrupts(
+		Hx85xServiceInterrupts(
 			devContext->TouchContext,
 			&devContext->I2CContext,
 			&devContext->ReportContext);
@@ -390,12 +390,12 @@ TchGenerateHidReportDescriptor(
 )
 {
 	PDEVICE_EXTENSION devContext;
-	HX8526_CONTROLLER_CONTEXT* touchContext;
+	HX85X_CONTROLLER_CONTEXT* touchContext;
 	NTSTATUS status;
 
 	devContext = GetDeviceContext(Device);
 
-	touchContext = (HX8526_CONTROLLER_CONTEXT*)devContext->TouchContext;
+	touchContext = (HX85X_CONTROLLER_CONTEXT*)devContext->TouchContext;
 
 	PUCHAR hidReportDescBuffer = (PUCHAR)ExAllocatePoolWithTag(
 		NonPagedPool,
@@ -905,9 +905,9 @@ Return Value:
 		capsReport->MaximumContactPoints = PTP_MAX_CONTACT_POINTS;
 		capsReport->ReportID = REPORTID_DEVICE_CAPS;
 
-		if (devContext->TouchContext != NULL && ((HX8526_CONTROLLER_CONTEXT*)devContext->TouchContext)->MaxFingers != 0)
+		if (devContext->TouchContext != NULL && ((HX85X_CONTROLLER_CONTEXT*)devContext->TouchContext)->MaxFingers != 0)
 		{
-			capsReport->MaximumContactPoints = ((HX8526_CONTROLLER_CONTEXT*)devContext->TouchContext)->MaxFingers;
+			capsReport->MaximumContactPoints = ((HX85X_CONTROLLER_CONTEXT*)devContext->TouchContext)->MaxFingers;
 		}
 
 		Trace(

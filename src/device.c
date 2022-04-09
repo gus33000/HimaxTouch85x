@@ -23,12 +23,12 @@
 #include <controller.h>
 #include <device.h>
 #include <spb.h>
-//#include <HimaxTouch8526DriverETW.h>
+//#include <HimaxTouch85xDriverETW.h>
 #include <idle.h>
 #include <hid.h>
 #include <gpio.h>
 #include <device.h>
-#include <hx8526/hxinternal.h>
+#include <hx85x/hxinternal.h>
 #include <report.h>
 #include <touch_power/touch_power.h>
 #include <device.tmh>
@@ -95,7 +95,7 @@ OnInterruptIsr(
     //
     // Service touch interrupts.
     //
-    status = Hx8526ServiceInterrupts(
+    status = Hx85xServiceInterrupts(
         devContext->TouchContext,
         &devContext->I2CContext,
         &devContext->ReportContext);
@@ -155,7 +155,7 @@ Return Value:
     }
 
     //
-    // N.B. This HX8526 chip's IRQ is level-triggered, but cannot be enabled in
+    // N.B. This HX85X chip's IRQ is level-triggered, but cannot be enabled in
     //      ACPI until passive-level interrupt handling is added to the driver.
     //      Service chip in case we missed an edge during D3 or boot-up.
     //

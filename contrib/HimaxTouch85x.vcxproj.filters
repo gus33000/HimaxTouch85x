@@ -31,10 +31,10 @@
     <Filter Include="Source Files\touch_power">
       <UniqueIdentifier>{48991f5f-ce72-428a-bb02-7ff9f171fa57}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\hx8526">
+    <Filter Include="Source Files\hx85x">
       <UniqueIdentifier>{e315ae58-595b-4761-a85d-b9f815945abc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\hx8526">
+    <Filter Include="Header Files\hx85x">
       <UniqueIdentifier>{1a4a2c90-09cc-463b-b270-18cd15f46d6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -87,8 +87,8 @@
     <ClCompile Include="..\src\report.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\hx8526\hxinternal.c">
-      <Filter>Source Files\hx8526</Filter>
+    <ClCompile Include="..\src\hx85x\hxinternal.c">
+      <Filter>Source Files\hx85x</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -97,7 +97,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Inf Include="..\src\HimaxTouch8526.inf">
+    <Inf Include="..\src\HimaxTouch85x.inf">
       <Filter>Driver Files</Filter>
     </Inf>
   </ItemGroup>
@@ -162,8 +162,8 @@
     <ClInclude Include="..\include\report.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\hx8526\hxinternal.h">
-      <Filter>Header Files\hx8526</Filter>
+    <ClInclude Include="..\include\hx85x\hxinternal.h">
+      <Filter>Header Files\hx85x</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

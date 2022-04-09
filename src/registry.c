@@ -21,7 +21,7 @@
 
 --*/
 
-#include <hx8526\hxinternal.h>
+#include <hx85x\hxinternal.h>
 #include <registry.tmh>
 #include <internal.h>
 
@@ -34,14 +34,14 @@
 #define TOUCH_SCREEN_SETTINGS_FF_SUB_KEY L"Settings\\FF"
 
 //
-// Default HX8526 configuration values can be changed here. Please refer to the
-// HX8526 specification for a full description of the fields and value meanings
+// Default HX85X configuration values can be changed here. Please refer to the
+// HX85X specification for a full description of the fields and value meanings
 //
 
-static HX8526_CONFIGURATION gDefaultConfiguration =
+static HX85X_CONFIGURATION gDefaultConfiguration =
 {
     //
-    // HX8526 F01 - Device control settings
+    // HX85X F01 - Device control settings
     //
     {
         0,                                              // Sleep Mode (normal)
@@ -49,13 +49,13 @@ static HX8526_CONFIGURATION gDefaultConfiguration =
         0,                                              // Report Rate (standard)
         1,                                              // Configured
         0xff,                                           // Interrupt Enable
-        HX8526_MILLISECONDS_TO_TENTH_MILLISECONDS(20),    // Doze Interval
+        HX85X_MILLISECONDS_TO_TENTH_MILLISECONDS(20),    // Doze Interval
         10,                                             // Doze Threshold
-        HX8526_SECONDS_TO_HALF_SECONDS(2)                 // Doze Holdoff
+        HX85X_SECONDS_TO_HALF_SECONDS(2)                 // Doze Holdoff
     },
 
     //
-    // HX8526 F11 - 2D Touchpad sensor settings
+    // HX85X F11 - 2D Touchpad sensor settings
     //
     {
         1,                                              // Reporting mode (throttle)
@@ -1790,17 +1790,17 @@ TchRegistryGetControllerSettings(
 
 --*/
 {
-    HX8526_CONTROLLER_CONTEXT* controller;
+    HX85X_CONTROLLER_CONTEXT* controller;
     NTSTATUS status;
 
     UNREFERENCED_PARAMETER(FxDevice);
 
-    controller = (HX8526_CONTROLLER_CONTEXT*)ControllerContext;
+    controller = (HX85X_CONTROLLER_CONTEXT*)ControllerContext;
 
     RtlCopyMemory(
         &controller->Config,
         &gDefaultConfiguration,
-        sizeof(HX8526_CONFIGURATION));
+        sizeof(HX85X_CONFIGURATION));
 
     status = STATUS_SUCCESS;
 

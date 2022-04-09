@@ -22,7 +22,7 @@
 #include <Cross Platform Shim\compat.h>
 #include <controller.h>
 #include <spb.h>
-#include <hx8526\hxinternal.h>
+#include <hx85x\hxinternal.h>
 #include <internal.h>
 #include <touch_power\touch_power.h>
 #include <power.tmh>
@@ -37,7 +37,7 @@ TchPowerSettingCallback(
 {
     NTSTATUS status = STATUS_SUCCESS;
     PDEVICE_EXTENSION devContext = NULL;
-    HX8526_CONTROLLER_CONTEXT* ControllerContext = NULL;
+    HX85X_CONTROLLER_CONTEXT* ControllerContext = NULL;
     SPB_CONTEXT* SpbContext = NULL;
 
     if (Context == NULL)
@@ -53,7 +53,7 @@ TchPowerSettingCallback(
     }
 
     devContext = (PDEVICE_EXTENSION)Context;
-    ControllerContext = (HX8526_CONTROLLER_CONTEXT*)devContext->TouchContext;
+    ControllerContext = (HX85X_CONTROLLER_CONTEXT*)devContext->TouchContext;
     SpbContext = &(devContext->I2CContext);
 
     //
@@ -88,7 +88,7 @@ TchPowerSettingCallback(
                 TRACE_POWER,
                 "On Battery Power");
 
-            status = Hx8526ChangeChargerConnectedState(
+            status = Hx85xChangeChargerConnectedState(
                 ControllerContext,
                 SpbContext,
                 0
@@ -112,7 +112,7 @@ TchPowerSettingCallback(
                 TRACE_POWER,
                 "On External Power");
 
-            status = Hx8526ChangeChargerConnectedState(
+            status = Hx85xChangeChargerConnectedState(
                 ControllerContext,
                 SpbContext,
                 1
@@ -185,10 +185,10 @@ TchPowerSettingCallback(
                 &GestureEnabled,
                 sizeof(DWORD))) && GestureEnabled == 1)
             {
-                status = Hx8526SetReportingFlags(
+                status = Hx85xSetReportingFlags(
                     ControllerContext,
                     SpbContext,
-                    HX8526_REPORTING_WAKEUP_GESTURE_MODE,
+                    HX85X_REPORTING_WAKEUP_GESTURE_MODE,
                     NULL
                 );
 
@@ -232,10 +232,10 @@ TchPowerSettingCallback(
                 goto exit;
             }
 
-            status = Hx8526SetReportingFlags(
+            status = Hx85xSetReportingFlags(
                 ControllerContext,
                 SpbContext,
-                HX8526_REPORTING_CONTINUOUS_MODE,
+                HX85X_REPORTING_CONTINUOUS_MODE,
                 NULL
             );
 
@@ -292,10 +292,10 @@ Return Value:
 
 --*/
 {    
-    HX8526_CONTROLLER_CONTEXT* controller;
+    HX85X_CONTROLLER_CONTEXT* controller;
     NTSTATUS status;
 
-    controller = (HX8526_CONTROLLER_CONTEXT*) ControllerContext;
+    controller = (HX85X_CONTROLLER_CONTEXT*) ControllerContext;
 
     //
     // Check if we were already on
@@ -310,10 +310,10 @@ Return Value:
     //
     // Attempt to put the controller into operating mode 
     //
-    status = Hx8526ChangeSleepState(
+    status = Hx85xChangeSleepState(
         controller,
         SpbContext,
-        HX8526_F01_DEVICE_CONTROL_SLEEP_MODE_OPERATING);
+        HX85X_F01_DEVICE_CONTROL_SLEEP_MODE_OPERATING);
 
     if (!NT_SUCCESS(status))
     {
@@ -353,10 +353,10 @@ Return Value:
 
 --*/
 {
-    HX8526_CONTROLLER_CONTEXT* controller;
+    HX85X_CONTROLLER_CONTEXT* controller;
     NTSTATUS status;
 
-    controller = (HX8526_CONTROLLER_CONTEXT*) ControllerContext;
+    controller = (HX85X_CONTROLLER_CONTEXT*) ControllerContext;
 
     //
     // Interrupts are now disabled but the ISR may still be
@@ -368,10 +368,10 @@ Return Value:
     //
     // Put the chip in sleep mode
     //
-    status = Hx8526ChangeSleepState(
+    status = Hx85xChangeSleepState(
         ControllerContext,
         SpbContext,
-        HX8526_F01_DEVICE_CONTROL_SLEEP_MODE_SLEEPING);
+        HX85X_F01_DEVICE_CONTROL_SLEEP_MODE_SLEEPING);
 
     if (!NT_SUCCESS(status))
     {

@@ -21,7 +21,7 @@
 
 #include <Cross Platform Shim\compat.h>
 #include <spb.h>
-#include <hx8526\hxinternal.h>
+#include <hx85x\hxinternal.h>
 #include <init.tmh>
 
 NTSTATUS
@@ -49,18 +49,18 @@ TchStartDevice(
 
 --*/
 {
-	HX8526_CONTROLLER_CONTEXT* controller;
+	HX85X_CONTROLLER_CONTEXT* controller;
 	ULONG interruptStatus;
 	NTSTATUS status;
 
-	controller = (HX8526_CONTROLLER_CONTEXT*)ControllerContext;
+	controller = (HX85X_CONTROLLER_CONTEXT*)ControllerContext;
 	interruptStatus = 0;
 	status = STATUS_SUCCESS;
 
 	//
-	// Populate context with HX8526 function descriptors
+	// Populate context with HX85X function descriptors
 	//
-	status = Hx8526BuildFunctionsTable(
+	status = Hx85xBuildFunctionsTable(
 		ControllerContext,
 		SpbContext);
 
@@ -69,15 +69,15 @@ TchStartDevice(
 		Trace(
 			TRACE_LEVEL_ERROR,
 			TRACE_INIT,
-			"Could not build table of HX8526 functions - 0x%08lX",
+			"Could not build table of HX85X functions - 0x%08lX",
 			status);
 		goto exit;
 	}
 
 	//
-	// Initialize HX8526 function control registers
+	// Initialize HX85X function control registers
 	//
-	status = Hx8526ConfigureFunctions(
+	status = Hx85xConfigureFunctions(
 		ControllerContext,
 		SpbContext);
 
@@ -92,7 +92,7 @@ TchStartDevice(
 		goto exit;
 	}
 
-	status = Hx8526ConfigureInterruptEnable(
+	status = Hx85xConfigureInterruptEnable(
 		ControllerContext,
 		SpbContext);
 
@@ -109,7 +109,7 @@ TchStartDevice(
 	//
 	// Read and store the firmware version
 	//
-	status = Hx8526GetFirmwareVersion(
+	status = Hx85xGetFirmwareVersion(
 		ControllerContext,
 		SpbContext);
 
@@ -118,7 +118,7 @@ TchStartDevice(
 		Trace(
 			TRACE_LEVEL_ERROR,
 			TRACE_INIT,
-			"Could not get HX8526 firmware version - 0x%08lX",
+			"Could not get HX85X firmware version - 0x%08lX",
 			status);
 		goto exit;
 	}
@@ -126,7 +126,7 @@ TchStartDevice(
 	//
 	// Clear any pending interrupts
 	//
-	status = Hx8526CheckInterrupts(
+	status = Hx85xCheckInterrupts(
 		ControllerContext,
 		SpbContext,
 		&interruptStatus
@@ -167,11 +167,11 @@ Return Value:
 	NTSTATUS indicating sucess or failure
 --*/
 {
-	HX8526_CONTROLLER_CONTEXT* controller;
+	HX85X_CONTROLLER_CONTEXT* controller;
 
 	UNREFERENCED_PARAMETER(SpbContext);
 
-	controller = (HX8526_CONTROLLER_CONTEXT*)ControllerContext;
+	controller = (HX85X_CONTROLLER_CONTEXT*)ControllerContext;
 
 	return STATUS_SUCCESS;
 }
@@ -197,12 +197,12 @@ Return Value:
 	NTSTATUS indicating sucess or failure
 --*/
 {
-	HX8526_CONTROLLER_CONTEXT* context;
+	HX85X_CONTROLLER_CONTEXT* context;
 	NTSTATUS status;
 	
 	context = ExAllocatePoolWithTag(
 		NonPagedPoolNx,
-		sizeof(HX8526_CONTROLLER_CONTEXT),
+		sizeof(HX85X_CONTROLLER_CONTEXT),
 		TOUCH_POOL_TAG);
 
 	if (NULL == context)
@@ -216,7 +216,7 @@ Return Value:
 		goto exit;
 	}
 
-	RtlZeroMemory(context, sizeof(HX8526_CONTROLLER_CONTEXT));
+	RtlZeroMemory(context, sizeof(HX85X_CONTROLLER_CONTEXT));
 	context->FxDevice = FxDevice;
 
 	//
@@ -271,9 +271,9 @@ Return Value:
 	NTSTATUS indicating sucess or failure
 --*/
 {
-	HX8526_CONTROLLER_CONTEXT* controller;
+	HX85X_CONTROLLER_CONTEXT* controller;
 
-	controller = (HX8526_CONTROLLER_CONTEXT*)ControllerContext;
+	controller = (HX85X_CONTROLLER_CONTEXT*)ControllerContext;
 
 	if (controller != NULL)
 	{
