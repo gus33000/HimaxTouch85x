@@ -139,6 +139,11 @@ Return Value:
     NTSTATUS status;
     PDEVICE_EXTENSION devContext;
 
+    Trace(
+        TRACE_LEVEL_INFORMATION,
+        TRACE_POWER,
+        "OnD0Entry - Entry");
+    
     devContext = GetDeviceContext(Device);
 
     UNREFERENCED_PARAMETER(PreviousState);
@@ -166,6 +171,11 @@ Return Value:
     //
     TchCompleteIdleIrp(devContext);
 
+    Trace(
+        TRACE_LEVEL_INFORMATION,
+        TRACE_POWER,
+        "OnD0Entry - Exit");
+    
     return status;
 }
 
@@ -197,6 +207,11 @@ Return Value:
 
     PAGED_CODE();
 
+    Trace(
+        TRACE_LEVEL_INFORMATION,
+        TRACE_POWER,
+        "OnD0Exit - Entry");
+    
     devContext = GetDeviceContext(Device);
 
     UNREFERENCED_PARAMETER(TargetState);
@@ -212,6 +227,11 @@ Return Value:
             status);
     }
 
+    Trace(
+        TRACE_LEVEL_INFORMATION,
+        TRACE_POWER,
+        "OnD0Exit - Exit");
+    
     return status;
 }
 

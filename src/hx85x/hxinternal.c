@@ -57,6 +57,11 @@ NTSTATUS Hx8526ConfigureController(
       NTSTATUS status = STATUS_SUCCESS;
       LARGE_INTEGER delay;
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "Power On IC");
+      
       //
       // Power On IC
       //
@@ -80,6 +85,11 @@ NTSTATUS Hx8526ConfigureController(
       delay.QuadPart = -10 * 120;
       KeDelayExecutionThread(KernelMode, TRUE, &delay);
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "Power On MCU");
+      
       //
       // Power On MCU
       //
@@ -103,6 +113,11 @@ NTSTATUS Hx8526ConfigureController(
       delay.QuadPart = -10 * 10;
       KeDelayExecutionThread(KernelMode, TRUE, &delay);
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "Power On Flash");
+      
       //
       // Power On Flash
       //
@@ -126,6 +141,11 @@ NTSTATUS Hx8526ConfigureController(
       delay.QuadPart = -10 * 10;
       KeDelayExecutionThread(KernelMode, TRUE, &delay);
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "Fetch Flash");
+      
       //
       // Fetch Flash
       //
@@ -160,6 +180,11 @@ NTSTATUS Hx8520ConfigureController(
       NTSTATUS status = STATUS_SUCCESS;
       LARGE_INTEGER delay;
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "Power On IC");
+      
       //
       // Power On IC
       //
@@ -183,6 +208,11 @@ NTSTATUS Hx8520ConfigureController(
       delay.QuadPart = -10 * 120;
       KeDelayExecutionThread(KernelMode, TRUE, &delay);
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "Speed Mode");
+      
       //
       // Speed Mode
       //
@@ -206,6 +236,11 @@ NTSTATUS Hx8520ConfigureController(
       delay.QuadPart = -10 * 10;
       KeDelayExecutionThread(KernelMode, TRUE, &delay);
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "Power On MCU");
+      
       //
       // Power On MCU
       //
@@ -229,6 +264,11 @@ NTSTATUS Hx8520ConfigureController(
       delay.QuadPart = -10 * 10;
       KeDelayExecutionThread(KernelMode, TRUE, &delay);
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "Power On Flash");
+      
       //
       // Power On Flash
       //
@@ -347,7 +387,7 @@ Hx85xConfigureFunctions(
           TRACE_INIT,
           "Initializing Digitizer IC... Please wait");
 
-      if (ControllerContext->ChipModel == 0x8526)
+      if (ControllerContext->ChipModel == 0x8526 || ControllerContext->ChipModel == 0x8528)
       {
             status = Hx8526ConfigureController(SpbContext);
       }
@@ -365,6 +405,11 @@ Hx85xConfigureFunctions(
                 status);
             goto exit;
       }
+
+      Trace(
+          TRACE_LEVEL_INFORMATION,
+          TRACE_INIT,
+          "Chip fully configured!");
 
 exit:
       return status;
@@ -638,7 +683,7 @@ TchServiceObjectInterrupts(
                   SpbContext,
                   &data);
       }
-      else
+      else if (ControllerContext->ChipModel == 0x8520 || ControllerContext->ChipModel == 0x8528)
       {
             status = Hx8520GetObjectStatusFromController(
                   ControllerContext,
@@ -735,6 +780,11 @@ Hx85xChangeSleepState(
 
       if (SleepState == HX85X_F01_DEVICE_CONTROL_SLEEP_MODE_SLEEPING)
       {
+            Trace(
+                  TRACE_LEVEL_INFORMATION,
+                  TRACE_INIT,
+                  "Turning off Sense");
+
             //
             // Sense ON
             //
@@ -757,6 +807,11 @@ Hx85xChangeSleepState(
       }
       else
       {
+            Trace(
+                  TRACE_LEVEL_INFORMATION,
+                  TRACE_INIT,
+                  "Turning on Sense");
+
             //
             // Sense ON
             //

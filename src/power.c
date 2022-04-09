@@ -295,6 +295,11 @@ Return Value:
     HX85X_CONTROLLER_CONTEXT* controller;
     NTSTATUS status;
 
+    Trace(
+        TRACE_LEVEL_INFORMATION,
+        TRACE_POWER,
+        "TchWakeDevice - Entry");
+    
     controller = (HX85X_CONTROLLER_CONTEXT*) ControllerContext;
 
     //
@@ -326,6 +331,11 @@ Return Value:
 
 exit:
 
+    Trace(
+        TRACE_LEVEL_INFORMATION,
+        TRACE_POWER,
+        "TchWakeDevice - Exit");
+    
     return STATUS_SUCCESS;
 }
 
@@ -356,6 +366,11 @@ Return Value:
     HX85X_CONTROLLER_CONTEXT* controller;
     NTSTATUS status;
 
+    Trace(
+        TRACE_LEVEL_INFORMATION,
+        TRACE_POWER,
+        "TchStandbyDevice - Entry");
+    
     controller = (HX85X_CONTROLLER_CONTEXT*) ControllerContext;
 
     //
@@ -397,5 +412,10 @@ Return Value:
 
     WdfWaitLockRelease(controller->ControllerLock);
 
+    Trace(
+        TRACE_LEVEL_INFORMATION,
+        TRACE_POWER,
+        "TchStandbyDevice - Exit");
+    
     return STATUS_SUCCESS;
 }
