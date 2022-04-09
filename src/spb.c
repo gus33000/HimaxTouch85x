@@ -24,13 +24,11 @@
 #include "spb.h"
 #include <spb.tmh>
 
-#define I2C_VERBOSE_LOGGING 0
-
 NTSTATUS
 SpbDoWriteDataSynchronously(
     IN SPB_CONTEXT* SpbContext,
-    IN PUCHAR Address,
-    IN ULONG AddressLength,
+    IN PUCHAR Command,
+    IN ULONG CommandLength,
     IN PVOID Data,
     IN ULONG Length
 )
@@ -44,7 +42,7 @@ SpbDoWriteDataSynchronously(
   Arguments:
 
     SpbContext - Pointer to the current device context
-    Address    - The I2C register address to write to
+    Command    - The I2C register address to write to
     Data       - A buffer to receive the data at at the above address
     Length     - The amount of data to be read from the above address
 
@@ -64,7 +62,7 @@ SpbDoWriteDataSynchronously(
     // The address pointer and data buffer must be combined
     // into one contiguous buffer representing the write transaction.
     //
-    length = Length + AddressLength;
+    length = Length + CommandLength;
     memory = NULL;
 
     if (length > DEFAULT_SPB_BUFFER_SIZE)
@@ -105,12 +103,12 @@ SpbDoWriteDataSynchronously(
     //
     // Transaction starts by specifying the address bytes
     //
-    RtlCopyMemory(buffer, Address, AddressLength);
+    RtlCopyMemory(buffer, Command, CommandLength);
 
     //
-    // Address is followed by the data payload
+    // Command is followed by the data payload
     //
-    RtlCopyMemory((buffer + AddressLength), Data, length - AddressLength);
+    RtlCopyMemory((buffer + CommandLength), Data, length - CommandLength);
 
     status = WdfIoTargetSendWriteSynchronously(
         SpbContext->SpbIoTarget,
@@ -143,8 +141,8 @@ exit:
 NTSTATUS
 SpbWriteDataSynchronously(
     IN SPB_CONTEXT* SpbContext,
-    IN PUCHAR Address,
-    IN ULONG AddressLength,
+    IN PUCHAR Command,
+    IN ULONG CommandLength,
     IN PVOID Data,
     IN ULONG Length
 )
@@ -159,7 +157,7 @@ SpbWriteDataSynchronously(
   Arguments:
 
     SpbContext - Pointer to the current device context
-    Address    - The I2C register address to write to
+    Command    - The I2C register address to write to
     Data       - A buffer to receive the data at at the above address
     Length     - The amount of data to be read from the above address
 
@@ -175,8 +173,8 @@ SpbWriteDataSynchronously(
 
     status = SpbDoWriteDataSynchronously(
         SpbContext,
-        Address,
-        AddressLength,
+        Command,
+        CommandLength,
         Data,
         Length);
 
@@ -188,8 +186,8 @@ SpbWriteDataSynchronously(
 NTSTATUS
 SpbReadDataSynchronously(
     IN SPB_CONTEXT* SpbContext,
-    _In_reads_bytes_(AddressLength) PUCHAR Address,
-    IN ULONG AddressLength,
+    _In_reads_bytes_(CommandLength) PUCHAR Command,
+    IN ULONG CommandLength,
     _In_reads_bytes_(Length) PVOID Data,
     IN ULONG Length
 )
@@ -203,7 +201,7 @@ SpbReadDataSynchronously(
   Arguments:
 
     SpbContext - Pointer to the current device context
-    Address    - The I2C register address to read from
+    Command    - The I2C register address to read from
     Data       - A buffer to receive the data at at the above address
     Length     - The amount of data to be read from the above address
 
@@ -230,8 +228,8 @@ SpbReadDataSynchronously(
     //
     status = SpbDoWriteDataSynchronously(
         SpbContext,
-        Address,
-        AddressLength,
+        Command,
+        CommandLength,
         NULL,
         0);
 
@@ -299,16 +297,6 @@ SpbReadDataSynchronously(
             status);
         goto exit;
     }
-
-#if I2C_VERBOSE_LOGGING
-    DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "I2CREAD: LENGTH=%d", Length);
-    for (ULONG j = 0; j < Length; j++)
-    {
-        UCHAR byte = *(buffer + j);
-        DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, " %02hhX", byte);
-    }
-    DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_ERROR_LEVEL, "\n");
-#endif
 
     //
     // Copy back to the caller's buffer
