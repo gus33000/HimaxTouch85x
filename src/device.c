@@ -376,7 +376,7 @@ OnPrepareHardware(
         status = OpenIOTarget(devContext, devContext->ResetGpioId, GENERIC_READ | GENERIC_WRITE, &devContext->ResetGpio);
         if (!NT_SUCCESS(status)) {
             Trace(TRACE_LEVEL_ERROR, TRACE_DRIVER, "OpenIOTarget failed for Reset GPIO 0x%x", status);
-            goto continue;
+            goto continueinit;
         }
 
         Trace(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "Starting bring up sequence for the controller");
@@ -404,7 +404,7 @@ OnPrepareHardware(
         Trace(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "Done");
     }
 
-continue:
+continueinit:
     //
     // Initialize Spb so the driver can issue reads/writes
     //
