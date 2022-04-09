@@ -153,17 +153,117 @@ exit:
       return status;
 }
 
+NTSTATUS Hx8520ConfigureController(
+      IN SPB_CONTEXT* SpbContext
+)
+{
+      NTSTATUS status = STATUS_SUCCESS;
+      LARGE_INTEGER delay;
+
+      //
+      // Power On IC
+      //
+      status = SpbWriteDataSynchronously(
+            SpbContext, 
+            HX85X_IC_POWER_ON_COMMAND, 
+            sizeof(HX85X_IC_POWER_ON_COMMAND), 
+            NULL, 
+            0);
+
+      if (!NT_SUCCESS(status))
+      {
+            Trace(
+                TRACE_LEVEL_ERROR,
+                TRACE_INIT,
+                "Could not power on IC - 0x%08lX",
+                status);
+            goto exit;
+      }
+
+      delay.QuadPart = -10 * 120;
+      KeDelayExecutionThread(KernelMode, TRUE, &delay);
+
+      //
+      // Speed Mode
+      //
+      status = SpbWriteDataSynchronously(
+            SpbContext, 
+            HX8520_SPEED_MODE_COMMAND, 
+            sizeof(HX8520_SPEED_MODE_COMMAND), 
+            NULL, 
+            0);
+
+      if (!NT_SUCCESS(status))
+      {
+            Trace(
+                TRACE_LEVEL_ERROR,
+                TRACE_INIT,
+                "Could not fetch Flash - 0x%08lX",
+                status);
+            goto exit;
+      }
+
+      delay.QuadPart = -10 * 10;
+      KeDelayExecutionThread(KernelMode, TRUE, &delay);
+
+      //
+      // Power On MCU
+      //
+      status = SpbWriteDataSynchronously(
+            SpbContext, 
+            HX85X_MCU_POWER_ON_COMMAND, 
+            sizeof(HX85X_MCU_POWER_ON_COMMAND), 
+            NULL, 
+            0);
+
+      if (!NT_SUCCESS(status))
+      {
+            Trace(
+                TRACE_LEVEL_ERROR,
+                TRACE_INIT,
+                "Could not power on MCU - 0x%08lX",
+                status);
+            goto exit;
+      }
+
+      delay.QuadPart = -10 * 10;
+      KeDelayExecutionThread(KernelMode, TRUE, &delay);
+
+      //
+      // Power On Flash
+      //
+      status = SpbWriteDataSynchronously(
+            SpbContext, 
+            HX8520_FLASH_POWER_ON_COMMAND, 
+            sizeof(HX8520_FLASH_POWER_ON_COMMAND), 
+            NULL, 
+            0);
+
+      if (!NT_SUCCESS(status))
+      {
+            Trace(
+                TRACE_LEVEL_ERROR,
+                TRACE_INIT,
+                "Could not power on Flash - 0x%08lX",
+                status);
+            goto exit;
+      }
+
+      delay.QuadPart = -10 * 10;
+      KeDelayExecutionThread(KernelMode, TRUE, &delay);
+
+exit:
+      return status;
+}
+
 NTSTATUS
 Hx8526ConfigureFunctions(
       IN HX8526_CONTROLLER_CONTEXT* ControllerContext,
       IN SPB_CONTEXT* SpbContext
 )
 {
-      UNREFERENCED_PARAMETER(ControllerContext);
-
       NTSTATUS status = STATUS_SUCCESS;
       BYTE DeviceID[3] = {0};
-      int ChipModel = 0;
       BYTE SleepStatus = 0;
       LARGE_INTEGER delay;
 
@@ -195,15 +295,15 @@ Hx8526ConfigureFunctions(
           DeviceID[1],
           DeviceID[2]);
 
-      ChipModel = (DeviceID[0] << 8) | DeviceID[1];
+      ControllerContext->ChipModel = (DeviceID[0] << 8) | DeviceID[1];
 
       Trace(
           TRACE_LEVEL_INFORMATION,
           TRACE_INIT,
           "Chip Model - %04lX",
-          ChipModel);
+          ControllerContext->ChipModel);
 
-      if (ChipModel != 0x8526)
+      if (ControllerContext->ChipModel != 0x8526 || ControllerContext->ChipModel != 0x8520)
       {
             Trace(
                 TRACE_LEVEL_ERROR,
@@ -248,7 +348,14 @@ Hx8526ConfigureFunctions(
           TRACE_INIT,
           "Initializing Digitizer IC... Please wait");
 
-      status = Hx8526ConfigureController(SpbContext);
+      if (ControllerContext->ChipModel == 0x8526)
+      {
+            status = Hx8526ConfigureController(SpbContext);
+      }
+      else
+      {
+            status = Hx8520ConfigureController(SpbContext);
+      }
 
       if (!NT_SUCCESS(status))
       {
@@ -294,12 +401,12 @@ Return Value:
       HX8526_CONTROLLER_CONTEXT* controller;
 
       int i, x, y;
-      PHIMAX_EVENT_DATA controllerData = NULL;
+      PHX8526_EVENT_DATA controllerData = NULL;
       controller = (HX8526_CONTROLLER_CONTEXT* )ControllerContext;
 
       controllerData = ExAllocatePoolWithTag(
           NonPagedPoolNx,
-          sizeof(HIMAX_EVENT_DATA),
+          sizeof(HX8526_EVENT_DATA),
           TOUCH_POOL_TAG_HX);
 
       if (controllerData == NULL)
@@ -316,7 +423,7 @@ Return Value:
             HX85X_GET_EVENT_COMMAND, 
             sizeof(HX85X_GET_EVENT_COMMAND), 
             controllerData, 
-            sizeof(HIMAX_EVENT_DATA));
+            sizeof(HX8526_EVENT_DATA));
 
       if (!NT_SUCCESS(status))
       {
@@ -334,7 +441,7 @@ Return Value:
             controllerData->NumberOfTouchPoints = 0;
       }
 
-      if (controllerData->NumberOfTouchPoints > HIMAX_MAX_TOUCH_DATA)
+      if (controllerData->NumberOfTouchPoints > HX8526_MAX_TOUCH_DATA)
       {
             Trace(
                 TRACE_LEVEL_ERROR,

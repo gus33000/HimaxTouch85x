@@ -63,22 +63,36 @@ typedef struct _HIMAX_TOUCH_DATA
 	BYTE PositionY_Low;
 } HIMAX_TOUCH_DATA, * PHIMAX_TOUCH_DATA;
 
-#define HIMAX_MAX_TOUCH_DATA 5
+#define HX8526_MAX_TOUCH_DATA 5
+#define HX8520_MAX_TOUCH_DATA 2
 
-typedef struct _HIMAX_EVENT_DATA
+typedef struct _HX8526_EVENT_DATA
 {
-	HIMAX_TOUCH_DATA TouchData[HIMAX_MAX_TOUCH_DATA];
+	HIMAX_TOUCH_DATA TouchData[HX8526_MAX_TOUCH_DATA];
 
 	BYTE Reserved0[8];
 
-	BYTE Reserved1           : 4;
+	BYTE Reserved1 : 4;
 	BYTE NumberOfTouchPoints : 4;
 
 	BYTE ActivePointsMask;
 	BYTE Reserved2[2];
-} HIMAX_EVENT_DATA, * PHIMAX_EVENT_DATA;
+} HX8526_EVENT_DATA, *PHX8526_EVENT_DATA;
 
-#define TOUCH_POOL_TAG_HX              (ULONG)'xhoT'
+typedef struct _HX8520_EVENT_DATA
+{
+	HIMAX_TOUCH_DATA TouchData[HX8520_MAX_TOUCH_DATA];
+
+	BYTE Reserved0[4];
+
+	BYTE Reserved1 : 4;
+	BYTE NumberOfTouchPoints : 4;
+
+	BYTE ActivePointsMask;
+	BYTE Reserved2[2];
+} HX8520_EVENT_DATA, *PHX8520_EVENT_DATA;
+
+#define TOUCH_POOL_TAG_HX (ULONG)'xhoT'
 
 //
 // Logical structure for getting registry config settings
@@ -177,7 +191,9 @@ typedef struct _HX8526_CONTROLLER_CONTEXT
 
 	BYTE MaxFingers;
 
-    int HidQueueCount;
+	int ChipModel;
+
+	int HidQueueCount;
 } HX8526_CONTROLLER_CONTEXT;
 
 NTSTATUS
