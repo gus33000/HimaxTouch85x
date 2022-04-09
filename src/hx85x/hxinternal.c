@@ -448,6 +448,11 @@ Return Value:
       PHX8526_EVENT_DATA controllerData = NULL;
       controller = (HX85X_CONTROLLER_CONTEXT* )ControllerContext;
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "Hx8526GetObjectStatusFromController - Entry");
+      
       controllerData = ExAllocatePoolWithTag(
           NonPagedPoolNx,
           sizeof(HX8526_EVENT_DATA),
@@ -482,9 +487,26 @@ Return Value:
 
       if (controllerData->NumberOfTouchPoints == 0x0F)
       {
+            Trace(
+                  TRACE_LEVEL_INFORMATION,
+                  TRACE_INIT,
+                  "NumberOfTouchPoints was invalid, reset to 0");
+      
             controllerData->NumberOfTouchPoints = 0;
       }
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "NumberOfTouchPoints - %d",
+            controllerData->NumberOfTouchPoints);
+
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "[SANITY] Reserved1 - %d",
+            controllerData->Reserved1);
+      
       if (controllerData->NumberOfTouchPoints > HX8526_MAX_TOUCH_DATA)
       {
             Trace(
@@ -498,6 +520,11 @@ Return Value:
 
       if (controllerData->ActivePointsMask == 0xFF)
       {
+            Trace(
+                  TRACE_LEVEL_INFORMATION,
+                  TRACE_INIT,
+                  "ActivePointsMask was invalid, reset to 0");
+      
             controllerData->ActivePointsMask = 0;
       }
 
@@ -527,6 +554,11 @@ Return Value:
 
             Data->Positions[i].X = x;
             Data->Positions[i].Y = y;
+
+            Trace(
+                  TRACE_LEVEL_INFORMATION,
+                  TRACE_INIT,
+                  "Chip Reporting: Index: %d, X: %d, Y: %d, State: %d", i, Data->Positions[i].X, Data->Positions[i].Y, Data->States[i]);
       }
 
 free_buffer:
@@ -571,6 +603,11 @@ Return Value:
       PHX8520_EVENT_DATA controllerData = NULL;
       controller = (HX85X_CONTROLLER_CONTEXT* )ControllerContext;
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "Hx8520GetObjectStatusFromController - Entry");
+      
       controllerData = ExAllocatePoolWithTag(
           NonPagedPoolNx,
           sizeof(HX8520_EVENT_DATA),
@@ -605,9 +642,26 @@ Return Value:
 
       if (controllerData->NumberOfTouchPoints == 0x0F)
       {
+            Trace(
+                  TRACE_LEVEL_INFORMATION,
+                  TRACE_INIT,
+                  "NumberOfTouchPoints was invalid, reset to 0");
+      
             controllerData->NumberOfTouchPoints = 0;
       }
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "NumberOfTouchPoints - %d",
+            controllerData->NumberOfTouchPoints);
+
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "[SANITY] Reserved1 - %d",
+            controllerData->Reserved1);
+      
       if (controllerData->NumberOfTouchPoints > HX8520_MAX_TOUCH_DATA)
       {
             Trace(
@@ -621,6 +675,11 @@ Return Value:
 
       if (controllerData->ActivePointsMask == 0xFF)
       {
+            Trace(
+                  TRACE_LEVEL_INFORMATION,
+                  TRACE_INIT,
+                  "ActivePointsMask was invalid, reset to 0");
+      
             controllerData->ActivePointsMask = 0;
       }
 
@@ -650,6 +709,11 @@ Return Value:
 
             Data->Positions[i].X = x;
             Data->Positions[i].Y = y;
+
+            Trace(
+                  TRACE_LEVEL_INFORMATION,
+                  TRACE_INIT,
+                  "Chip Reporting: Index: %d, X: %d, Y: %d, State: %d", i, Data->Positions[i].X, Data->Positions[i].Y, Data->States[i]);
       }
 
 free_buffer:
@@ -671,6 +735,11 @@ TchServiceObjectInterrupts(
       NTSTATUS status = STATUS_SUCCESS;
       DETECTED_OBJECTS data;
 
+      Trace(
+            TRACE_LEVEL_INFORMATION,
+            TRACE_INIT,
+            "TchServiceObjectInterrupts - Entry");
+      
       RtlZeroMemory(&data, sizeof(data));
 
       //
@@ -690,7 +759,6 @@ TchServiceObjectInterrupts(
                   SpbContext,
                   &data);
       }
-
 
       if (!NT_SUCCESS(status))
       {

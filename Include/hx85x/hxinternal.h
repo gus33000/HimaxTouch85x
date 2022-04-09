@@ -72,8 +72,8 @@ typedef struct _HX8526_EVENT_DATA
 
 	BYTE Reserved0[8];
 
-	BYTE Reserved1 : 4;
 	BYTE NumberOfTouchPoints : 4;
+	BYTE Reserved1 : 4;
 
 	BYTE ActivePointsMask;
 	BYTE Reserved2[2];
@@ -85,8 +85,8 @@ typedef struct _HX8520_EVENT_DATA
 
 	BYTE Reserved0[4];
 
-	BYTE Reserved1 : 4;
 	BYTE NumberOfTouchPoints : 4;
+	BYTE Reserved1 : 4;
 
 	BYTE ActivePointsMask;
 	BYTE Reserved2[2];
